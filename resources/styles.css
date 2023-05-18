@@ -3,76 +3,44 @@ body {
     margin: 0;
     padding: 0;
     flex-direction: row;
-    height: 100vh;
-}
-
-nav {  
-    flex: 1;
-    background-color: #252526;
-	padding: 20px;
-    height: 100vh;
-    min-width: 240px;
-    max-width: 240px;
-}
-
-nav ul {
-	list-style-type: none;
-    padding: 0;
-}
-
-nav span {
-    display: inline-block;
-    width: 100%;
-    border-radius: 4px;
-    padding: 12px;
-}
-
-nav ul li {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-nav li img {
-    color: white;
-    display: block;
-    margin: 0 auto 20px;
-    width: 160px;
-    height: 160px;
-    border-radius: 80%;
-    margin-top: 40px;
-}
-
-p.image-description {
-    text-align: center;
-    color: azure;
-    margin-top: 10px;
-    margin-bottom: 30px;
-}
-
-nav li a {
-    text-decoration: none;
-    color: azure;
-}
-
-nav span.current-page {
-    color: black;
-    background-color: azure;
-}
-
-nav span:hover:not(.current-page) {
-	background-color: #555;
-}
-
-hr.solid {
-    border-top: 3px solid white;
-    padding: 12px;
+    background-color: #3e3e42;
 }
 
 main {
     flex: 4;
-    background-color: #3e3e42;
     color: white;
     padding: 60px;
+}
+
+label {
+    font-size: larger;
+    color: white;
+}
+
+input {
+    margin-left: 10px;
+    padding-left: 8px;
+    width: 200px;
+    border-radius: 5px;
+    border-color: transparent;
+}
+
+button {
+    margin-top: 20px;
+    margin-left: 20px;
+    text-align: center;
+    background-color: white;
+    border-radius: 4px;
+    border-color: transparent;
+}
+
+button:hover {
+    background-color: #ddd;
+}
+
+::placeholder {
+    color: black;
+    opacity: 0.3;
 }
 
 p {
@@ -83,4 +51,85 @@ p {
 p a {
     text-decoration: none;
     color: cornflowerblue;
+}
+
+#curriculum {
+    margin-top: 20px;
+    text-align: center;
+    text-decoration-color: white;
+}
+
+#curriculum td, th {
+    border: 1px solid white;
+}
+
+#curriculum td {
+    padding: 10px;
+}
+
+#curriculum th {
+    background-color:rgba(0, 0, 0, 0.2);
+}
+
+#curriculum td:hover {
+    background-color: #555;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+  
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+}
+  
+.close {
+    position: absolute;
+    right: 20px;
+    top: 0;
+    color: #aaa;
+    font-size: 50px;
+    font-weight: regular;
+    /* cursor: pointer; */
+}
+  
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#popupTable {
+    padding: 20px;
+    width: 100%;
+    border-collapse: collapse;
+}
+  
+#popupTable th,
+#popupTable td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid black;
+}
+  
+#popupTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+  
+#popupTable tr:hover {
+    background-color: #ddd;
 }
