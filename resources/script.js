@@ -21,6 +21,7 @@ for (let i = 0; i < cells.length; i++) {
 // Each key of the dictionary is a GRR and each value is a dictionary of courses
 let tables = {};
 let currentStudent;
+let optAprovadas = 0;
 
 // When the user clicks anywhere outside of the modal, close it
 document.addEventListener('click', function(event) {
@@ -41,12 +42,28 @@ function fetchXML(path) {
         for (let i = 0; i < students.length; i++) {
             const student = students[i];
             const grr = student.getElementsByTagName('MATR_ALUNO')[0].textContent;
-            let code = student.getElementsByTagName('COD_ATIV_CURRIC')[0].textContent;
+            const course = student.getElementsByTagName('COD_ATIV_CURRIC')[0].textContent;
+            let code = course;
             const type = student.getElementsByTagName('DESCR_ESTRUTURA')[0].textContent;
+            const name = student.getElementsByTagName('NOME_ATIV_CURRIC')[0].textContent;
+            const year = student.getElementsByTagName('ANO')[0].textContent;
+            const semester = student.getElementsByTagName('PERIODO')[0].textContent;
+            const situation = student.getElementsByTagName('SITUACAO')[0].textContent;
+            const grade = student.getElementsByTagName('MEDIA_FINAL')[0].textContent;
+            const attendance = parseInt(student.getElementsByTagName('FREQUENCIA')[0].textContent).toFixed(2);
+            let row;
 
-            // if (type == 'Optativas') {
-            //     code = 'OPT';
-            // }
+            if (type == 'Trabalho de Graduação I') {
+                code = 'TGI';
+            } else if (type == 'Trabalho de Graduação II') {
+                code = 'TGII';
+            } else if (type == 'Optativas') {
+                code = 'OPT';
+                if (optAprovadas < 6) {
+                    optAprovadas++;
+                    code += optAprovadas;
+                }
+            }
 
             // If the dictionary for the student doesn't exist yet, create it
             if (tables[grr] == null) {
@@ -55,23 +72,18 @@ function fetchXML(path) {
 
             // If the table for the course doesn't exist yet, create it
             if (tables[grr][code] == null) {
-                tables[grr][code] = document.createElement('table');
-                //tables[grr][code].id = grr + code;
-                const tableHeader = tables[grr][code].createTHead();
-                const headerRow = tableHeader.insertRow();
-                headerRow.innerHTML = '<th>Código</th><th>Nome</th><th>Ano</th><th>Período</th><th>Situação</th><th>Nota</th><th>Frequência</th>';
-                tables[grr][code].createTBody();
+                tables[grr][code] = createTable();
             }
 
-            const name = student.getElementsByTagName('NOME_ATIV_CURRIC')[0].textContent;
-            const year = student.getElementsByTagName('ANO')[0].textContent;
-            const semester = student.getElementsByTagName('PERIODO')[0].textContent;
-            const situation = student.getElementsByTagName('SITUACAO')[0].textContent;
-            const grade = student.getElementsByTagName('MEDIA_FINAL')[0].textContent;
-            const attendance = parseInt(student.getElementsByTagName('FREQUENCIA')[0].textContent).toFixed(2);
-
-            const row = tables[grr][code].getElementsByTagName('tbody')[0].insertRow();
-            row.innerHTML = `<td>${code}</td><td>${name}</td><td>${year}</td><td>${semester}</td><td>${situation}</td><td>${grade}</td><td>${attendance}</td>`;
+            if ((type == 'Optativas') && (code != 'OPT')) {
+                if (tables[grr]['OPT'] == null) {
+                    tables[grr]['OPT'] = createTable();
+                }
+                row = tables[grr]['OPT'].getElementsByTagName('tbody')[0].insertRow();
+                row.innerHTML = `<td>${course}</td><td>${name}</td><td>${year}</td><td>${semester}</td><td>${situation}</td><td>${grade}</td><td>${attendance}</td>`;
+            }
+            row = tables[grr][code].getElementsByTagName('tbody')[0].insertRow();
+            row.innerHTML = `<td>${course}</td><td>${name}</td><td>${year}</td><td>${semester}</td><td>${situation}</td><td>${grade}</td><td>${attendance}</td>`;
         }
     });
 }
@@ -93,14 +105,15 @@ function showHistory(code) {
         alert('Nenhum aluno selecionado');
         return;
     }
-    // if (code.includes('OPT')) {
-    //     code = 'OPT';
-    // }
+    if (code.startsWith('OPT')) {
+        code = 'OPT';
+    }
     modal.style.display = 'block';
     popupHeader.innerHTML = 'Histórico completo';
     if (tables[currentStudent][code] == null) {
         popupTable.innerHTML = 'Matéria não cursada pelo aluno';
     } else {
+        console.log(currentStudent, code);
         popupTable.innerHTML = tables[currentStudent][code].outerHTML;
     }
 }
@@ -112,8 +125,6 @@ function showLastCourse(code) {
     }
     modal.style.display = 'block';
     popupHeader.innerHTML = 'Última vez cursada';
-    console.log(currentStudent);
-    console.log(code);
     if (tables[currentStudent][code] == null) {
         popupTable.innerHTML = 'Matéria não cursada pelo aluno';
     } else {
@@ -168,6 +179,15 @@ function colorizeTable() {
 
 function validateNumberInput(input) {
     input.value = input.value.replace(/[^0-9]/g, '');
+}
+
+function createTable() {
+    let table = document.createElement('table');
+    const tableHeader = table.createTHead();
+    const headerRow = tableHeader.insertRow();
+    headerRow.innerHTML = '<th>Código</th><th>Nome</th><th>Ano</th><th>Período</th><th>Situação</th><th>Nota</th><th>Frequência</th>';
+    table.createTBody();
+    return table;
 }
 
 fetchXML('resources/alunos.xml');
