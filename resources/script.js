@@ -21,7 +21,6 @@ for (let i = 0; i < cells.length; i++) {
 // Each key of the dictionary is a GRR and each value is a dictionary of courses
 let tables = {};
 let currentStudent;
-let optAprovadas = 0;
 
 // When the user clicks anywhere outside of the modal, close it
 document.addEventListener('click', function(event) {
@@ -59,9 +58,11 @@ function fetchXML(path) {
                 code = 'TGII';
             } else if (type == 'Optativas') {
                 code = 'OPT';
-                if (optAprovadas < 6) {
-                    optAprovadas++;
-                    code += optAprovadas;
+                for (let i = 1; i <= 6; i++) {
+                    if (tables[grr]['OPT' + i] == null) {
+                        code += i;
+                        break;
+                    }
                 }
             }
 
